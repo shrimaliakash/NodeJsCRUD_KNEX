@@ -71,7 +71,7 @@ app.get('/book', (req, res) => {
 app.get('/book/:isbn', (req, res) => {
     const isbn = req.params.isbn;
 
-    knex('book').select("*").where('isbn', isbn)
+    knex('book').select("*").where('isbn', isbn).first()
     .then((rows) => {
         if(rows != '') {
             res.send(JSON.stringify({success: true, message: 'Book Found.', data: rows}))
