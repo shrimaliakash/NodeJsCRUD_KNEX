@@ -73,6 +73,7 @@ app.get('/book/:isbn', (req, res) => {
 
     knex('book').select("*").where('isbn', isbn).first()
     .then((rows) => {
+        console.log(rows);
         if(rows != '') {
             res.send(JSON.stringify({success: true, message: 'Book Found.', data: rows}))
         } else {
@@ -82,17 +83,18 @@ app.get('/book/:isbn', (req, res) => {
     .catch((err) => { res.send(JSON.stringify({success: false, message: 'Book Not Found.'})) });
 });
 
-app.post('/book/:isbn', (req, res) => {
-    const isbn = req.params.isbn;
+app.post('/book/:id', (req, res) => {
+    const id = req.params.id;
     if(req.body != '') {
         const book =  {
+            isbn : req.body.isbn,
             title : req.body.title,
             author : req.body.author,
             publish_date : req.body.publish_date,
             publisher : req.body.publisher,
             numOfPages : req.body.numOfPages
         };
-        knex('book').where({ isbn: isbn }).update(book)
+        knex('book').where({ id: id }).update(book)
             .then((book) => res.send(JSON.stringify({success: true, message: 'Book Updated.'})))
             .catch((err) => res.send(JSON.stringify({success: false, message: err})));
     } else {
@@ -100,9 +102,9 @@ app.post('/book/:isbn', (req, res) => {
     }
 });
 
-app.delete('/book/:isbn', (req, res) => {
-    const isbn = req.params.isbn;
-    knex('book').where({ isbn: isbn }).del()
+app.delete('/book/:id', (req, res) => {
+    const id = req.params.id;
+    knex('book').where({ id: id }).del()
         .then((book) => res.send(JSON.stringify({success: true, message: 'Book Deleted.'})))
         .catch((err) => res.send(JSON.stringify({success: false, message: err})));
 });
