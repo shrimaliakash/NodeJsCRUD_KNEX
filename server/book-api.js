@@ -68,12 +68,11 @@ app.get('/book', (req, res) => {
     .catch((err) => { res.send(JSON.stringify({success: false, message: 'Book Not Found.'})) });
 });
 
-app.get('/book/:isbn', (req, res) => {
-    const isbn = req.params.isbn;
+app.get('/book/:id', (req, res) => {
+    const id = req.params.id;
 
-    knex('book').select("*").where('isbn', isbn).first()
+    knex('book').select("*").where('id', id).first()
     .then((rows) => {
-        console.log(rows);
         if(rows != '') {
             res.send(JSON.stringify({success: true, message: 'Book Found.', data: rows}))
         } else {
