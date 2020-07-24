@@ -85,17 +85,25 @@ app.get('/book/:id', (req, res) => {
 app.post('/book/:id', (req, res) => {
     const id = req.params.id;
     if(req.body != '') {
-        const book =  {
-            isbn : req.body.isbn,
-            title : req.body.title,
-            author : req.body.author,
-            publish_date : req.body.publish_date,
-            publisher : req.body.publisher,
-            numOfPages : req.body.numOfPages
-        };
-        knex('book').where({ id: id }).update(book)
-            .then((book) => res.send(JSON.stringify({success: true, message: 'Book Updated.'})))
-            .catch((err) => res.send(JSON.stringify({success: false, message: err})));
+	var book_details = knex('book').select("*").where('id', id).first()
+	.then((rows) => {
+		if(rows != '') {
+            const books =  {
+                isbn : req.body.isbn != '' ? req.body.isbn : rows.isbn,
+                title : req.body.title != '' ? req.body.title : rows.title,
+                author : req.body.author != '' ? req.body.author : rows.author,
+                publish_date : req.body.publish_date != '' ? req.body.publish_date : rows.publish_date,
+                publisher : req.body.publisher != '' ? req.body.publisher : rows.publisher,
+                numOfPages : req.body.numOfPages != '' ? req.body.numOfPages : rows.numOfPages
+            };
+			knex('book').where({ id: id }).update(books)
+		    .then((book) => res.send(JSON.stringify({success: true, message: 'Book Updated.'})))
+		    .catch((err) => res.send(JSON.stringify({success: false, message: err})));
+		} else {
+		    res.send(JSON.stringify({success: true, message: 'Book Not Found.'}))
+		}
+	})
+	.catch((err) => { res.send(JSON.stringify({success: false, message: 'Book Not Found.'})) });
     } else {
         res.send(JSON.stringify({success: false, message: 'Book Not Updated.'}));
     }
