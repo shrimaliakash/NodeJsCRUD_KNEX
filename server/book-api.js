@@ -48,7 +48,7 @@ app.post('/book', (req, res) => {
             numOfPages : req.body.numOfPages
         }];
         knex('book').insert(book)
-            .then((book) => res.send(JSON.stringify({success: true, message: 'Book Inserted.'})))
+            .then((result) => res.send(JSON.stringify({success: true, Inserted: result[0], message: 'Book Inserted.'})))
             .catch((err) => res.send(JSON.stringify({success: false, message: err})));
 
     } else {
