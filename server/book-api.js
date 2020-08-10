@@ -59,7 +59,7 @@ app.post('/book', (req, res) => {
 app.get('/book', (req, res) => {
     knex('book').select("*")
     .then((rows) => {
-        if(rows != '') {
+        if(rows != '' && rows != undefined) {
             res.send(JSON.stringify({success: true, message: 'Book Found.', data: rows}))
         } else {
             res.send(JSON.stringify({success: true, message: 'Book Not Found.'}))
@@ -73,7 +73,7 @@ app.get('/book/:id', (req, res) => {
 
     knex('book').select("*").where('id', id).first()
     .then((rows) => {
-        if(rows != '') {
+        if(rows != '' && rows != undefined) {
             res.send(JSON.stringify({success: true, message: 'Book Found.', data: rows}))
         } else {
             res.send(JSON.stringify({success: true, message: 'Book Not Found.'}))
@@ -84,10 +84,10 @@ app.get('/book/:id', (req, res) => {
 
 app.post('/book/:id', (req, res) => {
     const id = req.params.id;
-    if(req.body != '') {
+    if(req.body != '' && req.body != undefined) {
 	var book_details = knex('book').select("*").where('id', id).first()
 	.then((rows) => {
-		if(rows != '') {
+		if(rows != '' && rows != undefined) {
             const books =  {
                 isbn : req.body.isbn != '' ? req.body.isbn : rows.isbn,
                 title : req.body.title != '' ? req.body.title : rows.title,
